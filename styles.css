@@ -1,0 +1,43 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f4;
+}
+
+.kanban {
+    display: flex;
+    justify-content: space-around;
+    margin: 20px;
+}
+
+.column {
+    background-color: #fff;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    width: 30%;
+    padding: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.column h2 {
+    text-align: center;
+    color: #333;
+}
+
+.task {
+    background-color: #e3f2fd;
+    margin: 10px 0;
+    padding: 10px;
+    border-radius: 5px;
+    cursor: grab;
+    border: 1px solid #90caf9;
+}
+
+.task.dragging {
+    opacity: 0.5;
+}
+
+.column.drop {
+    background-color: #f0f8ff;
+}
