@@ -7,7 +7,7 @@ let currentTask = null;
 //* functions
 
 const handleDragover = (event) => {
-  event.preventDefault(); // allow drop
+  event.preventDefault();
 
   const draggedTask = document.querySelector(".dragging");
   const target = event.target.closest(".task, .tasks");
@@ -15,17 +15,14 @@ const handleDragover = (event) => {
   if (!target || target === draggedTask) return;
 
   if (target.classList.contains("tasks")) {
-    // target is the tasks element
     const lastTask = target.lastElementChild;
     if (!lastTask) {
-      // tasks is empty
       target.appendChild(draggedTask);
     } else {
       const { bottom } = lastTask.getBoundingClientRect();
       event.clientY > bottom && target.appendChild(draggedTask);
     }
   } else {
-    // target is another
     const { top, height } = target.getBoundingClientRect();
     const distance = top + height / 2;
 
@@ -53,13 +50,7 @@ const handleDragstart = (event) => {
 
 const handleDelete = (event) => {
   currentTask = event.target.closest(".task");
-
-  // show preview
-  modal.querySelector(".preview").innerText = currentTask.innerText.substring(
-    0,
-    100
-  );
-
+  modal.querySelector(".preview").innerText = currentTask.innerText.substring(0, 100);
   modal.showModal();
 };
 
@@ -69,7 +60,6 @@ const handleEdit = (event) => {
   task.replaceWith(input);
   input.focus();
 
-  // move cursor to the end
   const selection = window.getSelection();
   selection.selectAllChildren(input);
   selection.collapseToEnd();
@@ -109,11 +99,11 @@ const createTask = (content) => {
   task.className = "task";
   task.draggable = true;
   task.innerHTML = `
-  <div>${content}</div>
-  <menu>
-      <button data-edit><i class="bi bi-pencil-square"></i></button>
-      <button data-delete><i class="bi bi-trash"></i></button>
-  </menu>`;
+    <div>${content}</div>
+    <menu>
+      <button data-edit title="Edit Task">Edit</button>
+      <button data-delete title="Delete Task">X</button>
+    </menu>`;
   task.addEventListener("dragstart", handleDragstart);
   task.addEventListener("dragend", handleDragend);
   return task;
@@ -131,14 +121,12 @@ const createTaskInput = (text = "") => {
 
 //* event listeners
 
-// dragover and drop
-tasksElements = columnsContainer.querySelectorAll(".tasks");
+const tasksElements = columnsContainer.querySelectorAll(".tasks");
 for (const tasksEl of tasksElements) {
   tasksEl.addEventListener("dragover", handleDragover);
   tasksEl.addEventListener("drop", handleDrop);
 }
 
-// add, edit and delete task
 columnsContainer.addEventListener("click", (event) => {
   if (event.target.closest("button[data-add]")) {
     handleAdd(event);
@@ -149,15 +137,6 @@ columnsContainer.addEventListener("click", (event) => {
   }
 });
 
-// confirm deletion
 modal.addEventListener("submit", () => currentTask && currentTask.remove());
-
-// cancel deletion
 modal.querySelector("#cancel").addEventListener("click", () => modal.close());
-
-// clear current task
 modal.addEventListener("close", () => (currentTask = null));
-    column.addEventListener('drop', () => {
-        column.classList.remove('drop');
-    });
-});
