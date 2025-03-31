@@ -4,11 +4,8 @@ const columns = columnsContainer.querySelectorAll(".column");
 
 let currentTask = null;
 
-//* functions
-
 const handleDragover = (event) => {
   event.preventDefault();
-
   const draggedTask = document.querySelector(".dragging");
   const target = event.target.closest(".task, .tasks");
 
@@ -20,13 +17,13 @@ const handleDragover = (event) => {
       target.appendChild(draggedTask);
     } else {
       const { bottom } = lastTask.getBoundingClientRect();
-      event.clientY > bottom && target.appendChild(draggedTask);
+      if (event.clientY > bottom) target.appendChild(draggedTask);
     }
   } else {
     const { top, height } = target.getBoundingClientRect();
-    const distance = top + height / 2;
+    const midpoint = top + height / 2;
 
-    if (event.clientY < distance) {
+    if (event.clientY < midpoint) {
       target.before(draggedTask);
     } else {
       target.after(draggedTask);
@@ -43,7 +40,6 @@ const handleDragend = (event) => {
 };
 
 const handleDragstart = (event) => {
-  event.dataTransfer.effectsAllowed = "move";
   event.dataTransfer.setData("text/plain", "");
   requestAnimationFrame(() => event.target.classList.add("dragging"));
 };
@@ -56,7 +52,7 @@ const handleDelete = (event) => {
 
 const handleEdit = (event) => {
   const task = event.target.closest(".task");
-  const input = createTaskInput(task.innerText);
+  const input = createTaskInput(task.innerText.trim());
   task.replaceWith(input);
   input.focus();
 
@@ -73,7 +69,7 @@ const handleBlur = (event) => {
 };
 
 const handleAdd = (event) => {
-  const tasksEl = event.target.closest(".column").lastElementChild;
+  const tasksEl = event.target.closest(".column").querySelector(".tasks");
   const input = createTaskInput();
   tasksEl.appendChild(input);
   input.focus();
@@ -81,8 +77,7 @@ const handleAdd = (event) => {
 
 const updateTaskCount = (column) => {
   const tasks = column.querySelector(".tasks").children;
-  const taskCount = tasks.length;
-  column.querySelector(".column-title h3").dataset.tasks = taskCount;
+  column.querySelector(".column-title h3").dataset.tasks = tasks.length;
 };
 
 const observeTaskChanges = () => {
@@ -92,20 +87,25 @@ const observeTaskChanges = () => {
   }
 };
 
-observeTaskChanges();
-
-const createTask = (content) => {
+const createTask = (content, description = "") => {
   const task = document.createElement("div");
   task.className = "task";
   task.draggable = true;
+  task.dataset.description = description;
+  task.dataset.taskId = crypto.randomUUID();
+
   task.innerHTML = `
     <div>${content}</div>
     <menu>
       <button data-edit title="Edit Task">Edit</button>
       <button data-delete title="Delete Task">X</button>
-    </menu>`;
+      <button data-more title="View Description">...</button>
+    </menu>
+  `;
+
   task.addEventListener("dragstart", handleDragstart);
   task.addEventListener("dragend", handleDragend);
+
   return task;
 };
 
@@ -119,14 +119,14 @@ const createTaskInput = (text = "") => {
   return input;
 };
 
-//* event listeners
-
+// Drag/drop events
 const tasksElements = columnsContainer.querySelectorAll(".tasks");
 for (const tasksEl of tasksElements) {
   tasksEl.addEventListener("dragover", handleDragover);
   tasksEl.addEventListener("drop", handleDrop);
 }
 
+// Handle add/edit/delete/more
 columnsContainer.addEventListener("click", (event) => {
   if (event.target.closest("button[data-add]")) {
     handleAdd(event);
@@ -134,8 +134,7 @@ columnsContainer.addEventListener("click", (event) => {
     handleEdit(event);
   } else if (event.target.closest("button[data-delete]")) {
     handleDelete(event);
-  }
-});
+
 
 modal.addEventListener("submit", () => currentTask && currentTask.remove());
 modal.querySelector("#cancel").addEventListener("click", () => modal.close());
