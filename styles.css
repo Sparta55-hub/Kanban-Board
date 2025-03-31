@@ -1,8 +1,8 @@
 body {
   margin: 0;
   font-family: 'Segoe UI', sans-serif;
-  background: url(https://img.freepik.com/free-vector/paper-style-dynamic-lines-background_23-2149008629.jpg) no-repeat center center fixed;
-  background: #f4f4f4;
+  background: url('https://img.freepik.com/free-vector/paper-style-dynamic-lines-background_23-2149008629.jpg') no-repeat center center fixed, #f4f4f4;
+  background-size: cover;
 }
 
 .columns {
@@ -22,9 +22,8 @@ body {
   gap: 1rem;
 }
 
-/* Column Color Themes */
 .todo {
-  background: #e8f5e9; /* Light green */
+  background: #e8f5e9; 
 }
 
 .todo .tasks {
@@ -32,7 +31,7 @@ body {
 }
 
 .in-progress {
-  background: #fff3e0; /* Light orange */
+  background: #fff3e0; 
 }
 
 .in-progress .tasks {
@@ -40,7 +39,7 @@ body {
 }
 
 .done {
-  background: #ffebee; /* Light red */
+  background: #ffebee; 
 }
 
 .done .tasks {
