@@ -12,7 +12,6 @@ body {
 }
 
 .column {
-  background: #fff;
   padding: 1rem;
   border-radius: 8px;
   width: 300px;
@@ -20,6 +19,31 @@ body {
   display: flex;
   flex-direction: column;
   gap: 1rem;
+}
+
+/* Column Color Themes */
+.todo {
+  background: #e8f5e9; /* Light green */
+}
+
+.todo .tasks {
+  background: #f1f8e9;
+}
+
+.in-progress {
+  background: #fff3e0; /* Light orange */
+}
+
+.in-progress .tasks {
+  background: #ffe0b2;
+}
+
+.done {
+  background: #ffebee; /* Light red */
+}
+
+.done .tasks {
+  background: #ffcdd2;
 }
 
 .column-title {
@@ -38,7 +62,6 @@ body {
 .tasks {
   flex-grow: 1;
   min-height: 150px;
-  background: #f9f9f9;
   padding: 0.5rem;
   border: 2px dashed #ccc;
   border-radius: 6px;
