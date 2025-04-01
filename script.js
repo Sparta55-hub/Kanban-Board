@@ -4,8 +4,6 @@ const columns = columnsContainer.querySelectorAll(".column");
 
 let currentTask = null;
 
-//* functions
-
 const handleDragover = (event) => {
   event.preventDefault();
 
@@ -118,8 +116,6 @@ const createTaskInput = (text = "") => {
   input.addEventListener("blur", handleBlur);
   return input;
 };
-
-//* event listeners
 
 const tasksElements = columnsContainer.querySelectorAll(".tasks");
 for (const tasksEl of tasksElements) {
