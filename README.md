@@ -1,0 +1,1 @@
+This project focuses on the development of a Kanban Board, a widely used task management tool that visually represents tasks in different stages of progress. The main goal of this project is to build a fully functional Kanban Board with essential features while ensuring an intuitive user experience.
