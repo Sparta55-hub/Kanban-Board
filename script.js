@@ -1,138 +1,138 @@
-const modal = document.querySelector(".confirm-modal");
-const columnsContainer = document.querySelector(".columns");
-const columns = columnsContainer.querySelectorAll(".column");
+const confirmationDialog = document.querySelector(".confirm-modal");
+const boardContainer = document.querySelector(".columns");
+const boardColumns = boardContainer.querySelectorAll(".column");
 
-let currentTask = null;
+let selectedTask = null;
 
-const handleDragover = (event) => {
+const onDragOver = (event) => {
   event.preventDefault();
 
-  const draggedTask = document.querySelector(".dragging");
-  const target = event.target.closest(".task, .tasks");
+  const activeTask = document.querySelector(".dragging");
+  const dropTarget = event.target.closest(".task, .tasks");
 
-  if (!target || target === draggedTask) return;
+  if (!dropTarget || dropTarget === activeTask) return;
 
-  if (target.classList.contains("tasks")) {
-    const lastTask = target.lastElementChild;
+  if (dropTarget.classList.contains("tasks")) {
+    const lastTask = dropTarget.lastElementChild;
     if (!lastTask) {
-      target.appendChild(draggedTask);
+      dropTarget.appendChild(activeTask);
     } else {
       const { bottom } = lastTask.getBoundingClientRect();
-      event.clientY > bottom && target.appendChild(draggedTask);
+      event.clientY > bottom && dropTarget.appendChild(activeTask);
     }
   } else {
-    const { top, height } = target.getBoundingClientRect();
-    const distance = top + height / 2;
+    const { top, height } = dropTarget.getBoundingClientRect();
+    const midpoint = top + height / 2;
 
-    if (event.clientY < distance) {
-      target.before(draggedTask);
+    if (event.clientY < midpoint) {
+      dropTarget.before(activeTask);
     } else {
-      target.after(draggedTask);
+      dropTarget.after(activeTask);
     }
   }
 };
 
-const handleDrop = (event) => {
+const onDrop = (event) => {
   event.preventDefault();
 };
 
-const handleDragend = (event) => {
+const onDragEnd = (event) => {
   event.target.classList.remove("dragging");
 };
 
-const handleDragstart = (event) => {
+const onDragStart = (event) => {
   event.dataTransfer.effectsAllowed = "move";
   event.dataTransfer.setData("text/plain", "");
   requestAnimationFrame(() => event.target.classList.add("dragging"));
 };
 
-const handleDelete = (event) => {
-  currentTask = event.target.closest(".task");
-  modal.querySelector(".preview").innerText = currentTask.innerText.substring(0, 100);
-  modal.showModal();
+const onDelete = (event) => {
+  selectedTask = event.target.closest(".task");
+  confirmationDialog.querySelector(".preview").innerText = selectedTask.innerText.substring(0, 100);
+  confirmationDialog.showModal();
 };
 
-const handleEdit = (event) => {
-  const task = event.target.closest(".task");
-  const input = createTaskInput(task.innerText);
-  task.replaceWith(input);
-  input.focus();
+const onEdit = (event) => {
+  const taskElement = event.target.closest(".task");
+  const inputElement = createTaskInput(taskElement.innerText);
+  taskElement.replaceWith(inputElement);
+  inputElement.focus();
 
-  const selection = window.getSelection();
-  selection.selectAllChildren(input);
-  selection.collapseToEnd();
+  const textSelection = window.getSelection();
+  textSelection.selectAllChildren(inputElement);
+  textSelection.collapseToEnd();
 };
 
-const handleBlur = (event) => {
-  const input = event.target;
-  const content = input.innerText.trim() || "Untitled";
-  const task = createTask(content.replace(/\n/g, "<br>"));
-  input.replaceWith(task);
+const onBlur = (event) => {
+  const inputElement = event.target;
+  const taskContent = inputElement.innerText.trim() || "Untitled";
+  const newTask = createTask(taskContent.replace(/\n/g, "<br>"));
+  inputElement.replaceWith(newTask);
 };
 
-const handleAdd = (event) => {
-  const tasksEl = event.target.closest(".column").lastElementChild;
-  const input = createTaskInput();
-  tasksEl.appendChild(input);
-  input.focus();
+const onAdd = (event) => {
+  const taskListElement = event.target.closest(".column").lastElementChild;
+  const inputElement = createTaskInput();
+  taskListElement.appendChild(inputElement);
+  inputElement.focus();
 };
 
-const updateTaskCount = (column) => {
-  const tasks = column.querySelector(".tasks").children;
-  const taskCount = tasks.length;
-  column.querySelector(".column-title h3").dataset.tasks = taskCount;
+const refreshTaskCount = (columnElement) => {
+  const taskElements = columnElement.querySelector(".tasks").children;
+  const taskTotal = taskElements.length;
+  columnElement.querySelector(".column-title h3").dataset.tasks = taskTotal;
 };
 
-const observeTaskChanges = () => {
-  for (const column of columns) {
-    const observer = new MutationObserver(() => updateTaskCount(column));
-    observer.observe(column.querySelector(".tasks"), { childList: true });
+const monitorTaskChanges = () => {
+  for (const columnElement of boardColumns) {
+    const observer = new MutationObserver(() => refreshTaskCount(columnElement));
+    observer.observe(columnElement.querySelector(".tasks"), { childList: true });
   }
 };
 
-observeTaskChanges();
+monitorTaskChanges();
 
 const createTask = (content) => {
-  const task = document.createElement("div");
-  task.className = "task";
-  task.draggable = true;
-  task.innerHTML = `
+  const taskElement = document.createElement("div");
+  taskElement.className = "task";
+  taskElement.draggable = true;
+  taskElement.innerHTML = `
     <div>${content}</div>
     <menu>
       <button data-edit title="Edit Task">Edit</button>
       <button data-delete title="Delete Task">X</button>
     </menu>`;
-  task.addEventListener("dragstart", handleDragstart);
-  task.addEventListener("dragend", handleDragend);
-  return task;
+  taskElement.addEventListener("dragstart", onDragStart);
+  taskElement.addEventListener("dragend", onDragEnd);
+  return taskElement;
 };
 
 const createTaskInput = (text = "") => {
-  const input = document.createElement("div");
-  input.className = "task-input";
-  input.dataset.placeholder = "Task name";
-  input.contentEditable = true;
-  input.innerText = text;
-  input.addEventListener("blur", handleBlur);
-  return input;
+  const inputElement = document.createElement("div");
+  inputElement.className = "task-input";
+  inputElement.dataset.placeholder = "Task name";
+  inputElement.contentEditable = true;
+  inputElement.innerText = text;
+  inputElement.addEventListener("blur", onBlur);
+  return inputElement;
 };
 
-const tasksElements = columnsContainer.querySelectorAll(".tasks");
-for (const tasksEl of tasksElements) {
-  tasksEl.addEventListener("dragover", handleDragover);
-  tasksEl.addEventListener("drop", handleDrop);
+const taskLists = boardContainer.querySelectorAll(".tasks");
+for (const taskList of taskLists) {
+  taskList.addEventListener("dragover", onDragOver);
+  taskList.addEventListener("drop", onDrop);
 }
 
-columnsContainer.addEventListener("click", (event) => {
+boardContainer.addEventListener("click", (event) => {
   if (event.target.closest("button[data-add]")) {
-    handleAdd(event);
+    onAdd(event);
   } else if (event.target.closest("button[data-edit]")) {
-    handleEdit(event);
+    onEdit(event);
   } else if (event.target.closest("button[data-delete]")) {
-    handleDelete(event);
+    onDelete(event);
   }
 });
 
-modal.addEventListener("submit", () => currentTask && currentTask.remove());
-modal.querySelector("#cancel").addEventListener("click", () => modal.close());
-modal.addEventListener("close", () => (currentTask = null));
+confirmationDialog.addEventListener("submit", () => selectedTask && selectedTask.remove());
+confirmationDialog.querySelector("#cancel").addEventListener("click", () => confirmationDialog.close());
+confirmationDialog.addEventListener("close", () => (selectedTask = null));
