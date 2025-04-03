@@ -5,14 +5,14 @@ body {
   background-size: cover;
 }
 
-.board {
+.columns {
   display: flex;
   gap: 1.5rem;
   padding: 2rem;
   justify-content: center;
 }
 
-.board-section {
+.column {
   padding: 1.5rem;
   border-radius: 8px;
   width: 400px; 
@@ -22,44 +22,44 @@ body {
   gap: 1.5rem;
 }
 
-.pending {
+.todo {
   background: #e8f5e9; 
 }
 
-.pending .task-list {
+.todo .tasks {
   background: #f1f8e9;
 }
 
-.ongoing {
+.in-progress {
   background: #fff3e0; 
 }
 
-.ongoing .task-list {
+.in-progress .tasks {
   background: #ffe0b2;
 }
 
-.completed {
+.done {
   background: #ffebee; 
 }
 
-.completed .task-list {
+.done .tasks {
   background: #ffcdd2;
 }
 
-.section-header {
+.column-title {
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
 
-.section-header h3::after {
-  content: attr(data-count) " tasks";
+.column-title h3::after {
+  content: attr(data-tasks) " tasks";
   font-size: 0.8rem;
   color: #666;
   margin-left: 0.5rem;
 }
 
-.task-list {
+.tasks {
   flex-grow: 1;
   min-height: 200px; 
   padding: 1rem;
@@ -67,7 +67,7 @@ body {
   border-radius: 6px;
 }
 
-.card {
+.task {
   background: #e0f7fa;
   padding: 1rem;
   margin-bottom: 0.75rem;
@@ -79,21 +79,21 @@ body {
   cursor: grab;
 }
 
-.card.dragging {
+.task.dragging {
   opacity: 0.5;
 }
 
-.card div {
+.task div {
   flex-grow: 1;
   white-space: pre-wrap;
 }
 
-.card menu {
+.task menu {
   display: flex;
   gap: 0.5rem;
 }
 
-.card menu button {
+.task menu button {
   font-size: 1rem;
   background: none;
   border: none;
@@ -104,16 +104,16 @@ body {
   transition: background 0.2s;
 }
 
-.card menu button:hover {
+.task menu button:hover {
   background: #eee;
 }
 
-.card menu button[data-remove]:hover {
+.task menu button[data-delete]:hover {
   background: #fdd;
   color: #c00;
 }
 
-button[data-new] {
+button[data-add] {
   background-color: #1976d2;
   color: white;
   border: none;
@@ -122,11 +122,11 @@ button[data-new] {
   cursor: pointer;
 }
 
-button[data-new]:hover {
+button[data-add]:hover {
   background-color: #0d47a1;
 }
 
-.card-input {
+.task-input {
   background: #fffde7;
   border: 1px dashed #ccc;
   border-radius: 6px;
@@ -134,12 +134,12 @@ button[data-new]:hover {
   min-height: 2.5rem;
 }
 
-.card-input:empty::before {
+.task-input:empty::before {
   content: attr(data-placeholder);
   color: #aaa;
 }
 
-.dialog-box {
+.confirm-modal {
   padding: 2rem;
   border: none;
   border-radius: 8px;
@@ -148,34 +148,34 @@ button[data-new]:hover {
   box-shadow: 0 0 10px rgba(0,0,0,0.2);
 }
 
-.dialog-box::backdrop {
+.confirm-modal::backdrop {
   background: rgba(0,0,0,0.5);
 }
 
-.dialog-box .preview-text {
+.confirm-modal .preview {
   margin: 1rem 0;
   font-style: italic;
 }
 
-.dialog-box form {
+.confirm-modal form {
   display: flex;
   justify-content: flex-end;
   gap: 1rem;
 }
 
-.dialog-box button {
+.confirm-modal button {
   padding: 0.75rem 1.25rem;
   border-radius: 4px;
   border: none;
   cursor: pointer;
 }
 
-.dialog-box button[type="submit"] {
+.confirm-modal button[type="submit"] {
   background-color: #d32f2f;
   color: white;
 }
 
-.dialog-box #dismiss {
+.confirm-modal #cancel {
   background-color: #ccc;
 }
 
